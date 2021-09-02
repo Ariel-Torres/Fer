@@ -1,1 +1,213 @@
-this is a test
+disp('------------------Metodo de Biseccion------------------')
+syms x
+f=input('Introduzca la funcion: ');
+a=input('Introduzca el valor de a: ');
+b=input('Introduzca el valor de b: ');
+tol=input('Ingrese el margen de error: 10^-');
+tol=10^-tol;
+fa=subs(f,a);
+fb=subs(f,b);
+if fa*fb<0
+    c=(a+b)/2;
+    fc=subs(f,c);
+    cont=1;
+    error=abs(fc);
+    fprintf('n || a\t\t\t\t\t\t || b\t\t\t\t\t || Ca\t\t\t\t\t || error\n');
+    fprintf('%d ||%.15f || %.15f || %.15f || %e\n', cont, double(a), double(b), double(c), double(error))
+    while error > tol
+        cont=cont+1;
+        if fa*fc<0
+            b=c;
+            c=(a+b)/2;
+            error=abs(c-b);
+        else
+            a=c;
+            c=(a+b)/2;
+            error=abs(c-a);
+        end
+        fc=subs(f,c);
+        fprintf('%d ||%.15f || %.15f || %.15f || %e\n', cont, double(a), double(b), double(c), double(error))
+    end
+    fprintf('\nEl valor aproximado de X es: %.15f\n', double(c))
+end
+
+
+disp('------------------Metodo de Newton------------------')
+syms x
+f=input('Introduzca la funcion: ');
+x0=input('Introduzca el punto inicial: ');
+tol=input('Ingrese el margen de error: 10^-');
+tol=10^-tol;
+df=diff(f);
+fa=subs(f,x0);
+fb=subs(df,x0);
+x1=x0-(fa/fb);
+error=abs(x1-x0);
+cont=1;
+fprintf('n || X0\t\t\t\t\t || X1\t\t\t\t || error\n');
+fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(error))
+while (error > tol && cont < 100)
+    cont=cont+1;
+    x0=x1;
+    fa=subs(f,x0);
+    fb=subs(df,x0);
+    x1=x0-(fa/fb);
+    error=abs(x1-x0);
+    fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(error))
+end
+fprintf('\nEl valor aproximado de X es: %.15f\n', double(x1))
+
+
+disp('------------------Metodo de Punto Fijo------------------')
+syms x
+f=input('Introduzca la funcion: ');
+x0=input('Introduzca el punto inicial: ');
+tol=input('Ingrese el margen de error: 10^-');
+tol=10^-tol;
+x1=subs(f,x0);
+error=abs(x1-x0);
+cont=1;
+fprintf('n || X0\t\t\t\t\t || X1\t\t\t\t || error\n');
+fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(error))
+while (error > tol && cont < 100)
+    cont=cont+1;
+    x0=x1;
+    x1=subs(f,x0);
+    error=abs(x1-x0);
+    fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(error))
+end
+fprintf('\nEl valor aproximado de X es: %.15f\n', double(x1))
+
+
+
+disp('------------------Metodo de la secante------------------')
+syms x
+f=input('Introduzca la funcion (f(x)=0): ');
+x0=input('Introduzca el punto x0: ');
+x1=input('Introduzca el punto x1: ');
+tol=input('Ingrese el margen de error: 10^-');
+tol=10^-tol;
+x2=x1-((subs(f,x1)*(x1-x0))/(subs(f,x1)-subs(f,x0)));
+error=abs(x2-x1);
+cont=1;
+fprintf('n || X0\t\t\t\t\t || X1\t\t\t\t|| X2\t\t\t\t || error\n');
+fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(x2), double(error))
+while (error > tol && cont < 100)
+    cont=cont+1;
+    x0=x1;
+    x1=x2;
+    x2=x1-((subs(f,x1)*(x1-x0))/(subs(f,x1)-subs(f,x0)));
+    error=abs(x2-x1);
+    fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(x2), double(error))
+end
+fprintf('\nEl valor aproximado de X es: %.15f\n', double(x2))
+
+% CONFIGURACIONES INICIALES
+    clc;
+    clear all;
+    syms x;
+    syms h;
+
+% DATOS DE ENTRADA
+    fprintf('MéTODO DE POSICIóN FALSA\n\n');
+    f = input('Ingrese la función f(x)=0: ');
+    he = input('Ingrese la función de h: ');
+    
+    % SOLUCIóN UTILIZANDO SOLVE.
+    solucion = double(solve(f,x));
+    fprintf('Solución con Solve(): %9.15f \n', double(solucion));
+        
+    p0 = input('Ingrese el valor de p0: ');
+    p1 = input('Ingrese el valor de p1: ');
+    precision = input('Ingrese el valor de precisión: 10^-');
+    precision = 10^-precision;
+    
+%MéTODO
+    fp0 = subs(f, p0);
+    fp1 = subs(f, p1);
+
+    if ((fp0 * fp1) < 0) %Cumpliendo la primera condición
+        p2 = p1 - ((fp1*(p1 - p0))/(fp1 - fp0)); %Ecuación de trabajo
+        altura = subs(he,p2);
+        count = 1;
+        error = abs(p2 - p1);
+
+        disp(' n            p0                  p1                 r                h              error')
+        fprintf('%2.0f | %9.15f | %9.15f | %9.15f | %9.15f | %e\n', count, double(p0), double(p1), double(p2), double(altura), double(error))
+
+        while error > precision
+            count = count + 1;
+            fp = subs(f, p2);
+
+            if (fp1 * fp) < 0
+                p0 = p1;
+                p1 = p2;
+            else 
+                p1 = p2;
+            end
+
+            fp0 = subs(f, p0);
+            fp1 = subs(f, p1);
+            p2 = p1 - ((fp1*(p1 - p0))/(fp1 - fp0));
+            altura = subs(he,p2);
+            error = abs(p2 - p1);
+
+            fprintf('%2.0f | %9.15f | %9.15f | %9.15f | %9.15f | %e\n', count, double(p0), double(p1), double(p2), double(altura), double(error))
+        end
+
+    fprintf('\n\n---------------------------------------')
+    fprintf('\nEL VALOR DE R ES: %9.15f', double(p2))
+    fprintf('\nEL VALOR DE H ES: %9.15f', double(altura))
+    fprintf('\n---------------------------------------\n')
+   
+    else
+        disp('No hay cambio de signo en los valores ingresados')
+    end
+
+
+
+% CONFIGURACIONES INICIALES
+    clc;
+    clear all;
+    syms x;
+
+% DATOS DE ENTRADA
+     fprintf('M�TODO DE STEFFENSEN RS151870\n\n');
+     
+     g = input('Ingrese la funci�n g(x)=x : '); 
+     f = input('Ingrese la funci�n f(x)=0: ');    
+    
+     % SOLUCI�N UTILIZANDO SOLVE.
+        solucion = double(solve(f,x));
+        fprintf('Soluci�n de Solve(): %9.15f \n', double(solucion));
+    
+    p0 = input('Ingrese el valor de p0: ');
+    paro = input('Ingrese el valor de precisi�n: ');
+    count = 1;
+
+    p1 = subs(g, p0);
+    p2 = subs(g, p1);
+
+    p = p0 - (((p1-p0)^2)/(p2-2*p1+p0));
+    error = abs(p - p0);
+
+    disp('n             p0                  p1                  p2                  p               error')
+    fprintf('%2.0f | %9.15f | %9.15f | %9.15f | %9.15f | %e\n', count, double(p0), double(p1), double(p2), double(p), double(error))
+
+    while error > paro
+        count = count + 1;
+        p0 = p;
+        p1 = subs(g, p0);
+        p2 = subs(g, p1);
+
+        p = p0 - (((p1-p0)^2)/(p2-2*p1+p0));
+        error = abs(p - p0);
+
+        fprintf('%2.0f | %9.15f | %9.15f | %9.15f | %9.15f | %e\n', count, double(p0), double(p1), double(p2), double(p), double(error))
+    end
+
+    fprintf('\n\n---------------------------------------')
+    fprintf('\nEL VALOR DE P ES: %9.15f', double(p))
+    fprintf('\n---------------------------------------\n')
+
+
