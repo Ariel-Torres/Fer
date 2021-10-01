@@ -1,179 +1,115 @@
-disp('------------------Metodo de Biseccion------------------')
-syms x
-f=input('Introduzca la funcion f(x)=0: ');
-a=input('Introduzca el valor de a: ');
-b=input('Introduzca el valor de b: ');
-tol=input('Ingrese el margen de error: 10^-');
-tol=10^-tol;
-fa=subs(f,a);
-fb=subs(f,b);
-if fa*fb<0
-    c=(a+b)/2;
-    fc=subs(f,c);
-    cont=1;
-    error=abs(fc);
-    fprintf('n || a\t\t\t\t\t\t || b\t\t\t\t\t || Ca\t\t\t\t\t || error\n');
-    fprintf('%d ||%.15f || %.15f || %.15f || %e\n', cont, double(a), double(b), double(c), double(error))
-    while error > tol
-        cont=cont+1;
-        if fa*fc<0
-            b=c;
-            c=(a+b)/2;
-            error=abs(c-b);
-        else
-            a=c;
-            c=(a+b)/2;
-            error=abs(c-a);
-        end
-        fc=subs(f,c);
-        fprintf('%d ||%.15f || %.15f || %.15f || %e\n', cont, double(a), double(b), double(c), double(error))
-    end
-    fprintf('\nEl valor aproximado de X es: %.15f\n', double(c))
-end
-
-
-disp('------------------Metodo de Newton------------------')
-syms x
-f=input('Introduzca la funcion f(x)=0: ');
-x0=input('Introduzca el punto inicial: ');
-tol=input('Ingrese el margen de error: 10^-');
-tol=10^-tol;
-df=diff(f);
-fa=subs(f,x0);
-fb=subs(df,x0);
-x1=x0-(fa/fb);
-error=abs(x1-x0);
-cont=1;
-fprintf('n || X0\t\t\t\t\t || X1\t\t\t\t || error\n');
-fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(error))
-while (error > tol && cont < 100)
-    cont=cont+1;
-    x0=x1;
-    fa=subs(f,x0);
-    fb=subs(df,x0);
-    x1=x0-(fa/fb);
-    error=abs(x1-x0);
-    fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(error))
-end
-fprintf('\nEl valor aproximado de X es: %.15f\n', double(x1))
-
-
-disp('------------------Metodo de Punto Fijo------------------')
-syms x
-	g = input('Ingrese la función g(x)=x : '); 
-     f = input('Ingrese la función f(x)=0 (No es necesario): ');    
-    
-     % SOLUCIÓN UTILIZANDO SOLVE.
-        solucion = double(solve(f,x));
-        fprintf('Solución con Solve(): %9.15f \n', double(solucion));
-        
-    p0 = input('Ingrese el valor de p0: '); 
-    precision = input('Ingrese el valor de precisión: ');
-    count = 1;
-%MÉTODO
-    p = subs(g, p0);
-    error = abs(p - p0);
-
-    disp(' n            p0                  p            error')
-    fprintf('%2.0f | %9.15f | %9.15f | %3.3e\n', count, double(p0), double(p), double(error))
-
-    while error > precision
-        count = count + 1;
-        p0 = p; 
-        p = subs(g, p0);
-        error = abs(p - p0);
-        fprintf('%2.0f | %9.15f | %9.15f | %3.3e\n', count, double(p0), double(p), double(error))
-    end
-    
-    fprintf('\n\n---------------------------------------')
-    fprintf('\nEL VALOR DE P ES: %9.15f', double(p))
-    fprintf('\n---------------------------------------\n')
-
-
-
-disp('------------------Metodo de la secante------------------')
-syms x
-f=input('Introduzca la funcion f(x)=0: ');
-x0=input('Introduzca el punto x0: ');
-x1=input('Introduzca el punto x1: ');
-tol=input('Ingrese el margen de error: 10^-');
-tol=10^-tol;
-x2=x1-((subs(f,x1)*(x1-x0))/(subs(f,x1)-subs(f,x0)));
-error=abs(x2-x1);
-cont=1;
-fprintf('n || X0\t\t\t\t\t || X1\t\t\t\t|| X2\t\t\t\t || error\n');
-fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(x2), double(error))
-while (error > tol && cont < 100)
-    cont=cont+1;
-    x0=x1;
-    x1=x2;
-    x2=x1-((subs(f,x1)*(x1-x0))/(subs(f,x1)-subs(f,x0)));
-    error=abs(x2-x1);
-    fprintf('%d ||%.15f || %.15f || %e\n', cont, double(x0), double(x1), double(x2), double(error))
-end
-fprintf('\nEl valor aproximado de X es: %.15f\n', double(x2))
-
 % CONFIGURACIONES INICIALES
-    clc;
-    clear all;
-    syms x;
-    syms h;
+syms x;
 
 % DATOS DE ENTRADA
-    disp('------------------Metodo de la posicion falsa------------------')
-    f = input('Ingrese la funcion f(x)=0: ');
-    he = input('Ingrese la funcion de h: ');
+fprintf('** MÉTODO: LAGRANGE  **\n\n');
+while(1)
+    punto=input('Introduzca el punto a interpolar: ');
+    disp('1-->Solo tablas : ');
+    disp('2-->F(x)=Tabla G(X)=Funcion :');
+    disp('3-->F(x)=Funcion G(x)=tabla: ');
+    disp('4-->salir: ');
+    seleccion = input('Selccione un tipo de funcion : ');
     
-    % SOLUCION UTILIZANDO SOLVE.
-    solucion = double(solve(f,x));
-    fprintf('Solucion con Solve(): %9.15f \n', double(solucion));
-        
-    p0 = input('Ingrese el valor de p0: ');
-    p1 = input('Ingrese el valor de p1: ');
-    precision = input('Ingrese el valor de precision: 10^-');
-    precision = 10^-precision;
+    f=0;
+    g=0;
+    fa=0;
+    fg=0;
+    grado=0;
+    fp=0;
+    switch seleccion
+        case 1
+            clc;
+            f=input('Introduzca la serie de datos Xo...Xn [Xo X1 X2...Xn]: ');
+            g=input('Introduzca la serie de datos fxo...fxn [fxo fx1 fx2...fxn]: ');
+            fa=f;
+            fg=g;
+        case 2
+            clc;
+            f=input('Introduzca la serie de datos Xo...Xn [Xo X1 X2...Xn]: ');
+            g=input('Introduzca f(x)=0 : ');
+            fa=f;
+            fg=subs(g,f);
+            fp=subs(g,punto);%funcion del valor error a aproximar
+        case 3
+            clc;
+            f=input('Introduzca f(x)=0 : ');
+            g=input('Introduzca la serie de datos g(x)= [1,2,3,...] :');
+            fa=subs(f,g);
+            fg=g;
+            fp=subs(f,punto);%funcion del valor error a aproximar
+        case 4
+            return;
+        otherwise
+            clc;
+            disp('Error al seleccionar ');
+    end
     
-%METODO
-    fp0 = subs(f, p0);
-    fp1 = subs(f, p1);
-
-    if ((fp0 * fp1) < 0) %Cumpliendo la primera condicion
-        p2 = p1 - ((fp1*(p1 - p0))/(fp1 - fp0)); %Ecuacion de trabajo
-        altura = subs(he,p2);
-        count = 1;
-        error = abs(p2 - p1);
-
-        disp(' n            p0                  p1                 r                h              error')
-        fprintf('%2.0f | %9.15f | %9.15f | %9.15f | %9.15f | %e\n', count, double(p0), double(p1), double(p2), double(altura), double(error))
-
-        while error > precision
-            count = count + 1;
-            fp = subs(f, p2);
-
-            if (fp1 * fp) < 0
-                p0 = p1;
-                p1 = p2;
-            else 
-                p1 = p2;
+    
+    
+    grado=length(fa) - 1;
+    iteracion=length(fa);
+    L=zeros();
+    fprintf('EL polinomio de lagrange es de grado %3.0f ' , grado);
+    fprintf('\n... Realizando calculos ...\n\n' );
+    
+    %strcat
+    for i=1:iteracion
+        numerador=1;
+        denominador=1;
+        cadena='';
+        cadnum='';
+        cadenum='';
+        for j=1:iteracion
+            if i ~= j
+                n=(j-1);
+                cadnum=strcat(cadnum , '(x-x' , num2str(n) , ')' );
+                cadenum=strcat(cadenum , '(x' , num2str(i-1) , '-x' , num2str(j-1) , ')');
+                numerador=numerador * (punto - fa(j));
+                denominador=denominador *(fa(i)-fa(j));
             end
-
-            fp0 = subs(f, p0);
-            fp1 = subs(f, p1);
-            p2 = p1 - ((fp1*(p1 - p0))/(fp1 - fp0));
-            altura = subs(he,p2);
-            error = abs(p2 - p1);
-
-            fprintf('%2.0f | %9.15f | %9.15f | %9.15f | %9.15f | %e\n', count, double(p0), double(p1), double(p2), double(altura), double(error))
         end
-
-    fprintf('\n\n---------------------------------------')
-    fprintf('\nEL VALOR DE R ES: %9.15f', double(p2))
-    fprintf('\nEL VALOR DE H ES: %9.15f', double(altura))
-    fprintf('\n---------------------------------------\n')
-   
-    else
-        disp('No hay cambio de signo en los valores ingresados')
+        cadena=strcat(cadena,'(',cadnum, ')' , '/(' , cadenum , ')' );
+        L(i)=(numerador/denominador);
+        fprintf('L(%1.0f) = %s = %9.15f \n\n' ,(i-1), cadena , L(i) );
     end
+    
+    fprintf('P(x)= ')
+    for k=1:iteracion
+        fprintf(' L%1.0f(x)*F(X%1.0f)+ ',k-1,k-1)
+    end
+    fprintf('\n\n')
+    
+    index=length(L);
+    resp=0;
+    for k = 1:index
+        resp= resp + (L(k)*fg(k));
+    end
+    fprintf('el valor aproximado es P(%1.5f)= %3.15f \n\n',punto, double(resp));
+    
+    P=0;
+    for k=1:index
+        P=P+L(k)*fg(k);
+    end
+    fprintf('el valor  F(%1.5f)= %3.15f \n\n', punto ,double(fp));
+    
+    if(seleccion == 2 || seleccion == 3)
+        err=abs(P-fp);
+        fprintf('el error calculado es = %3.3e \n\n\n',double(err));
+    end
+    
+    disp('salir==>1    continuar ==>2');
+    seleccion=input('seleccion : ');
+    if seleccion==1
+        return;
+    end
+end
+
+
+
+
+
+
 
 
 
@@ -183,41 +119,324 @@ fprintf('\nEl valor aproximado de X es: %.15f\n', double(x2))
     syms x;
 
 % DATOS DE ENTRADA
-     disp('------------------Metodo Stenffensen------------------')
-     
-     g = input('Ingrese la funcion g(x)=x : '); 
-     f = input('Ingrese la funcion f(x)=0: ');    
+    fprintf('** MÉTODO: NEVILLE  **\n\n');
+
+    vx = input('Ingrese el vector x: ');
+    xint = input('Ingrese el punto a interpolar: ');
+
+    disp('Seleccione como trabajara el metodo');
+    opcion = input('1) Vector;  2) Funcion;  opcion: ');
+
+    vy=zeros(length(vx));
+    if(opcion == 1)
+        vy = input('Ingrese el vector y: ');
+    elseif(opcion == 2)
+        f = input('Ingrese la funcion de trabajo: ');
+        vy = double(subs(f, vx));
+    else
+        disp('Opcion invalida :( \n');
+    end
     
-     % SOLUCION UTILIZANDO SOLVE.
-        solucion = double(solve(f,x));
-        fprintf('Solucion de Solve(): %9.15f \n', double(solucion));
-    
-    p0 = input('Ingrese el valor de p0: ');
-    paro = input('Ingrese el valor de precision: ');
-    count = 1;
+% MÉTODO
 
-    p1 = subs(g, p0);
-    p2 = subs(g, p1);
+    Q = zeros(length(vx), length(vx)); % creando matriz de zeros nxn
 
-    p = p0 - (((p1-p0)^2)/(p2-2*p1+p0));
-    error = abs(p - p0);
+    % agregar puntos iniciales a la  matriz
+    for i = 1 : length(vx)
+        Q(i, 1) = vy(i);
+        fprintf('Q(%1.0f,0) = %3.15f\n', i-1, vy(i));
+    end
 
-    disp('n             p0                  p1                  p2                  p               error')
-    fprintf('%2.0f | %9.15f | %9.15f | %9.15f | %9.15f | %e\n', count, double(p0), double(p1), double(p2), double(p), double(error))
+    disp('-------');
 
-    while error > paro
-        count = count + 1;
-        p0 = p;
-        p1 = subs(g, p0);
-        p2 = subs(g, p1);
-
-        p = p0 - (((p1-p0)^2)/(p2-2*p1+p0));
-        error = abs(p - p0);
-
-        fprintf('%2.0f | %9.15f | %9.15f | %9.15f | %9.15f | %e\n', count, double(p0), double(p1), double(p2), double(p), double(error))
+    % calcular las siguientes Q
+    for j = 2:length(vx) %x
+        for i = j: length(vx) %y
+            Q(i, j) = ( (xint - vx(i-j+1))*Q(i, j-1) - (xint - vx(i) )*Q( i-1, j-1) ) / (vx(i) - vx(i-j+1));
+            fprintf('Q(%1.0f,%1.0f) = ((x-x%1.0f)*Q(%1.0f,%1.0f)-(x-x%1.0f)*Q(%1.0f,%1.0f))/(x%1.0f-x%1.0f) = %3.15f \n',i-1,j-1, i-j, i-1, j-2, i-1, i-2, j-2, i-1, i-j, Q(i,j));%a todos se les rest -1 y lo demaa squeda igyal
+        end
+        disp('-------');
     end
 
     fprintf('\n\n---------------------------------------')
-    fprintf('\nEL VALOR DE P ES: %9.15f', double(p))
+    fprintf('\nEL VALOR DE P ES: %9.15f', Q(length(vx), length(vx)));
     fprintf('\n---------------------------------------\n')
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+% CONFIGURACIONES INICIALES
+    syms x;
+
+% DATOS DE ENTRADA
+    fprintf('** MÉTODO: DIFERENCIAS DIVIDIDAS  **\n\n');
+
+    disp('¿Cómo desea introducir los datos?')
+    disp('1) X ^ Y dados en una tabla.');%El dato que se pide será el X al simultanear ambas ecuaciones
+    disp('2) X en tabla y Y como función f(x).');
+    opcion = input('\nOpción: ');
+
+    punto = input('\nIntroduzca el valor a aproximar : ');
+
+    switch opcion
+        case 1
+            f=input('\nIntroduzca los datos X = [X1,X2,X3,..., Xn] : ');
+            g=input('Introduzca los datos Y = [Y1,Y2,Y3,..., Yn] : ');
+            fx=f;
+            fy=g;
+        case 2
+            f=input('\nIntroduzca los datos X = [X1,X2,X3,..., Xn] : '); %[-0.85 -0.8 -0.75 -0.5 -0.4 -0.25]
+            g=input('Introduzca la función equivalente a Y, es decir f(x): '); %log(17-6*x.^2)/log(19)
+            fx=f;
+            fy=subs(g,f);
+            fp=subs(g,punto);%punto exacto
+    end  
+% MÉTODO
+    grado = length(fx) - 1;
+    n = length(fx);
+    D = zeros(n,n);
+    fprintf('\nEl polinomio es de grado%2.0f\n\n' , double(grado));
+
+
+    %Creando la matriz de diferencias
+    k=1;
+    for j=1:n
+       h=j-1;
+       for i=k:n
+           if j==1
+             D(:,1) = fy;
+          else
+             D(i,j)=(D(i,j-1)-D(i-1,j-1))/(fx(i)-fx(i-h));  
+           end
+       end
+       k=k+1;
+    end
+
+    %Creando el polinomio (en memoria con datos numéricos)
+    %Px = D(1,1);
+    P = D(1,1);
+    for i=2:n
+       %factor = 1;
+       Pstr = 1;
+       for j=1:i-1
+          %factor = factor*(punto-fx(j));
+          Pstr = Pstr*(x - fx(j));
+       end
+       %Px = Px + (D(i,i)*factor);
+       P = P + (D(i,i)*Pstr);
+    end
+
+    %----Construyendo polinomio simbólico----------
+    pol = 'a0 + ';
+    for i=1:n-1
+
+        fprintf('a%2.0f = %9.15f\n', double(i-1), double(D(i,i)))
+        pol = strcat(pol,'a', num2str(i));
+        terms = '';
+        for j=0:i-1
+            terms = strcat(terms,'(x-x',num2str(j),')'); 
+        end
+        if i == n-1
+            pol = strcat(pol, terms);
+        else
+            pol = strcat(pol, terms,' +');
+        end
+        
+    end
+    fprintf('a%2.0f = %9.15f\n', double(n-1), double(D(n,n)))%Mostrando valores de constantes 'a'
+    fprintf('\nP%2.0f(%2.3f) = %s',grado,punto,pol) %Mostrando Polinomio simbólico
+    vpa(P, 15) %Mostrando Polinomio con numeros
+    
+
+
+    fprintf('\n****************** Matriz de diferencias ******************\n')
+
+    format long;
+    disp(D)
+
+
+
+    %-----------Resultados-----------------
+    aprox = subs(P,punto);
+    fprintf('\n\n---------------------------------------')
+    fprintf('\nEL VALOR DE P ES: %9.15f',double(aprox))
+    fprintf('\n---------------------------------------\n')
+    
+    if (opcion == 2)
+        error = abs(fp - aprox);
+        fprintf('\n\n---------------------------------------')
+        fprintf('\nEl valor exacto es: %9.15f', double(fp))
+        fprintf('\nEl error de aproximación es: %e\n',double(error))
+        fprintf('\n---------------------------------------\n')
+    end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+syms x;
+fprintf('** MÉTODO: HERMITE POR DIFERENCIAS DIVIDIDAS  **\n\n');
+
+funcion = input('\nLe fue dada la funcion (si=1, no=0): ');
+
+if funcion == 1
+    f = input('Digite la funcion f(x)= ');
+    df = diff(f,x);
+    x = input('Digite los valores de x [x0,x1,...,xn]: ');
+    y = subs(f,x);
+    yd = subs(df,x);
+else
+    x = input('Digite los valores de x [x0,x1,...,xn]: ');
+    y = input('Digite los valores de f(x)[f(x0),f(x1),...,f(xn)]: ');
+    yd = input('Digite los valores de de f´(x) [f´(x0),f´(x1),...f´(xn)]: ');
+end
+
+p = input('Digite el valor de x a aproximar: ');
+
+% MÉTODO
+n = 2 * length(x);
+D = zeros(n,n);
+
+px = 1;
+x2 = zeros(1,n);
+y2 = zeros(1,n);
+
+for i=1:2:n
+    x2(i) = x(px);
+    x2(i+1) = x(px);
+    
+    y2(i) = y(px);
+    y2(i+1) = y(px);
+    
+    px=px+1;
+end
+
+D(:,1) = y2';
+
+for i=2:n
+    for j=1:n-i+1
+        num = D(j+1,i-1) - D(j,i-1);
+        denom = x2(j+i-1)-x2(j);
+        if denom == 0
+            D(j,i) = yd((j+1)/2);
+        else
+            D(j,i) = num/denom;
+        end
+    end
+end
+
+M2 = y2';
+for i=2:n
+    for j=1:n-i+1
+        M2(j+i-1,i) = D(j,i);
+    end
+end
+
+disp('====================Matriz de Diferencias Divididas======================')
+format long g;
+disp(M2)
+format;
+disp('=========================================================================')
+
+pol = 'a0 +';
+for i=1:n
+    fprintf('a%2.0f = %9.15f\n', double(i-1), double(D(1,i))) %Mostrando valores de constantes 'a'
+    
+    terms = '';
+    for j=0:i-1
+        terms = strcat(terms,'(x-x',num2str(j),')');
+    end
+    if i ~= n
+        pol = strcat(pol,' a', num2str(i));
+        if i == n-1
+            pol = strcat(pol, terms);
+        else
+            pol = strcat(pol, terms,' +');
+        end
+    end
+end
+fprintf('\nP = %s', pol) %Mostrando Polinomio simbólico
+Pn = D(1,1);
+k=1;
+for i=2:n
+    S=1;
+    for j=1:i-1
+        S = S*(p-x2(j));
+    end
+    Pn = Pn + D(1,i)*S;
+end
+
+fprintf('\n\n----------------------------------------------')
+fprintf('\nEL VALOR APROXIMADO DE P ES: %9.15f',double(Pn))
+fprintf('\n------------------------------------------------\n')
+
+
+if funcion == 1
+    exacto = subs(f,p);
+    error = abs(exacto-Pn);
+    fprintf('\n\n---------------------------------------')
+    fprintf('\nEl valor exacto en la funcion es: %10.15f',double(exacto))
+    fprintf('\nEl error es: %e',double(error))
+    fprintf('\n\n---------------------------------------\n')
+end
+
+%Zi f[zi] f[zi,zi+1] f[zi,zi+1,zi+2] f[zi,zi+1,zi+2,zi+3] f[zi,zi+1,zi+2,zi+3,zi+4]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+clear all
+>> syms x
+>> f=exp((-2*(x^2))/5);
+>> x = [-2.85 -2.69 -2.41 -2.2 -2.19 -2.15 -1.9];
+>> y=subs(f,x);
+interp1(double(x),double(y),-2.2150,'cubic')
+
+interp1(X,Y,Xi,’método’, ‘extrap’)
+
+linear, spline, cubic, pchip, nearest,
+
+'linear'   - (default) linear interpolation
+      'nearest'  - nearest neighbor interpolation
+      'next'     - next neighbor interpolation
+      'previous' - previous neighbor interpolation
+      'spline'   - piecewise cubic spline interpolation (SPLINE)
+      'pchip'    - shape-preserving piecewise cubic interpolation
+      'cubic'    - same as 'pchip'
+      'v5cubic'  - the cubic interpolation from MATLAB 5, which does not
+                   extrapolate and uses 'spline' if X is not equally
+                   spaced.
+      'makima'   - modified Akima cubic interpolation
